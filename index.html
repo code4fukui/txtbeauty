@@ -1,0 +1,85 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<title>txtbeauty</title>
+<meta property="og:title" content="txtbeauty">
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://code4sabae.github.io/txtbeauty/txtbeauty.png">
+<meta property="og:image"  content="https://code4sabae.github.io/txtbeauty/txtbeauty.png">
+<script type="module">
+import { SJIS } from "https://code4sabae.github.io/js/SJIS.js";
+import { downloadZip } from "https://code4sabae.github.io/js/downloadZip.js";
+import { waitDropFiles } from "https://code4sabae.github.io/js/waitDropFiles.js";
+import { downloadTextFile } from "https://code4sabae.github.io/js/downloadTextFile.js";
+import { readAsArrayBufferAsync } from "https://code4sabae.github.io/js/readAsArrayBufferAsync.js";
+import { JISX0213 } from "https://code4fukui.github.io/mojikiban/JISX0213.js";
+
+const saveCheckboxState = (chk) => {
+    const v = localStorage.getItem("saveCheckboxState." + chk.id);
+    if (v !== null) {
+        chk.checked = v == "true";
+    }
+    chk.addEventListener("change", () => {
+        localStorage.setItem("saveCheckboxState." + chk.id, chk.checked.toString());
+    });
+};
+
+const shrinkToJISX0213 = (txt) => {
+    txt = JISX0213.shrink(txt);
+    if (!JISX0213.isValid(txt)) {
+        throw new Error(txt + " is not valid JIS X 0213");
+    }
+    return txt;
+};
+
+window.onload = async () => {
+    saveCheckboxState(shrink2jisx0213);
+
+    for (;;) {
+        divmain.innerHTML = "TXTファイルをドロップしてください";
+        const items = await waitDropFiles(divmain);
+        const files = [];
+        for (const item of items) {
+            // console.log(item.type); // ignore item.type in Windows
+            if (!(item.file.name.endsWith(".txt"))) {
+                alert("ファイル形式が違います。TXTファイルをドロップしてください。")
+                return;
+            }
+            const file = item.file;
+            const bin = await readAsArrayBufferAsync(file);
+            const data = SJIS.decodeAuto(new Uint8Array(bin));
+            let stxt = data;
+            if (shrink2jisx0213.checked) {
+                stxt = shrinkToJISX0213(data);
+            }
+            files.push({ name: file.name, data: stxt });
+        }
+        if (files.length == 1) {
+            downloadTextFile(files[0]);
+        } else {
+            downloadZip("txts.zip", files);
+        }
+    }
+};
+</script>
+</head>
+<body>
+    
+<div class="jumbotron">
+    <h1 class="display-4">txtbeauty</h1>
+    <p class="lead">CSVファイルをBOM付きUTF-8に変換します（まとめて変換、JSONファイル対応）</p>
+</div>
+
+<div class="mx-5">
+    <div id="divmain" class="border px-5 mx-auto pt-3 pb-3"></div>
+    <label><input type="checkbox" id="shrink2jisx0213" class="m-3" checked><a href=https://github.com/code4fukui/BaseRegistry/blob/main/%E7%94%A8%E8%AA%9E.md#jis-x-0213>JIS X 0213</a>に縮退β</label>
+</div>
+
+<footer class="text-muted">
+  <div class="container my-4 mx-0">
+    <p>Design: <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a></p>
+    <p>App: CC BY <a href="https://fukuno.jig.jp/3115">福野泰介の一日一創</a> by <a href="https://twitter.com/taisukef">@taisukef</a> (<a href=https://github.com/code4sabae/txtbeauty/>src on GitHub</a>)</p>
+  </div>
+</footer>
+
+</body>
+</html>
