@@ -40,10 +40,12 @@ window.onload = async () => {
         const files = [];
         for (const item of items) {
             // console.log(item.type); // ignore item.type in Windows
+            /*
             if (!(item.file.name.endsWith(".txt"))) {
                 alert("ファイル形式が違います。TXTファイルをドロップしてください。")
                 return;
             }
+            */
             const file = item.file;
             const bin = await readAsArrayBufferAsync(file);
             const data = SJIS.decodeAuto(new Uint8Array(bin));
