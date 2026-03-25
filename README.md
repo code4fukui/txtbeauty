@@ -1,20 +1,30 @@
 # txtbeauty
-日本語のREADMEはこちらです: [README.ja.md](README.ja.md)
 
-Converts text files to UTF-8 encoding (supports batch conversion).
+A Web/Code project by [Code for FUKUI](https://github.com/code4fukui).
 
-## Demo
-https://code4fukui.github.io/txtbeauty/
+**Live demo**: https://code4fukui.github.io/txtbeauty/
 
-## Features
-- Converts text files to UTF-8 encoding
-- Supports batch conversion of multiple files
-- Optional: Shrink text to JIS X 0213 character set
+## Technology Stack
 
-## Usage
-1. Drag and drop the text file(s) you want to convert.
-2. If desired, check the "Shrink to JIS X 0213" option to restrict the text to the JIS X 0213 character set.
-3. The converted text file(s) will be downloaded automatically.
+**Browser modules (ES imports):**
+
+- [`SJIS.js`](https://code4sabae.github.io/js/SJIS.js)
+- [`downloadZip.js`](https://code4sabae.github.io/js/downloadZip.js)
+- [`waitDropFiles.js`](https://code4sabae.github.io/js/waitDropFiles.js)
+- [`downloadTextFile.js`](https://code4sabae.github.io/js/downloadTextFile.js)
+- [`readAsArrayBufferAsync.js`](https://code4sabae.github.io/js/readAsArrayBufferAsync.js)
+- [`JISX0213.js`](https://code4fukui.github.io/mojikiban/JISX0213.js)
+
+
+## Installation & Setup
+
+No build step required. Clone the repository and open `index.html` in a browser,
+or visit the live demo at https://code4fukui.github.io/txtbeauty/
+
+## Contributing
+
+Contributions are welcome. Please open an issue or pull request on GitHub.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+
+MIT License. See [LICENSE](./LICENSE) for details.
